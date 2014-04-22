@@ -1,14 +1,8 @@
 % network defines
--define(I, /unsigned-integer).
 -define(IL, /unsigned-little-integer).
--define(IB, /unsigned-big-integer).
--define(b, /bytes).
--define(f, :32/float-little).
--define(QQ, :256?IL).
--define(QH, :128?IL).
--define(SH, :160?IL). % sha1
--define(Q, :64?IL). % quad
--define(L, :32?IL). % long
--define(W, :16?IL). % word
--define(WO, :16?IB). % word, big endian
+-define(SIL, /signed-little-integer).
+-define(F, :32/float-little).
+-define(LL, :64?IL). % long
+-define(L, :32?SIL). % long
+-define(S, :16?SIL). %short
 -define(B, :8). %byte
