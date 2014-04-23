@@ -28,9 +28,6 @@ test() ->
 connect(Host, Port) ->
 	gen_server:call(?MODULE, {connect, Host, Port}).
 
-player() ->
-	gen_server:call(?MODULE, player).
-
 info() ->
 	gen_server:call(?MODULE, info).
 
@@ -50,13 +47,6 @@ init([]) ->
 handle_call({connect, Host, Port}, _From, State) ->
 	{ok, Socket} = gen_udp:open(Port, [binary, {active, once}]),
 	{reply, ok, State#state{socket=Socket, host=Host, port=Port}};
-handle_call(player, _From, State) ->
-	Req = [<<16#FFFFFFFF?L>>, <<16#55?B>>, <<16#FFFFFFFF?L>>],
-	Val = gen_udp:send(State#state.socket, Req),
-	io:format("sending : ~p~n", [Req]),
-	io:format("udp send val: ~p~n", [Val]),
-	Msg = ok,
-	{reply, Msg, State};
 handle_call(info, _From, State = #state{socket=Socket, host=Host, port=Port}) ->
 	Req = [<<16#FFFFFFFF?L>>, <<16#54?B>>, <<"Source Engine Query">>, <<0?B>>],
 	ok = gen_udp:send(Socket, Host, Port, Req),
