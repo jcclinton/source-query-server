@@ -4,7 +4,7 @@
 An as-yet unfinished Erlang module that queries game servers which use the Source query protocol. Protocol can be found here https://developer.valvesoftware.com/wiki/Server_queries
 
 ## Status
-Currently you can query the basic server information (AS2_INFO)
+Currently you can query the basic server information (AS2_INFO). This is just a proof of concept, there is not much functionality implemented.
 
 
 ## Example
