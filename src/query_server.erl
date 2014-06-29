@@ -49,10 +49,9 @@ handle_call({connect, Host, Port}, _From, State) ->
 	{reply, ok, State#state{socket=Socket, host=Host, port=Port}};
 handle_call(info, _From, State = #state{socket=Socket, host=Host, port=Port}) ->
 	Req = [<<16#FFFFFFFF?L>>, <<16#54?B>>, <<"Source Engine Query">>, <<0?B>>],
+	%io:format("sending info request~n"),
 	ok = gen_udp:send(Socket, Host, Port, Req),
-	io:format("sending info request~n"),
-	Msg = ok,
-	{reply, Msg, State};
+	{reply, ok, State};
 handle_call(close, _From, State) ->
 	Msg = if State#state.socket =/= false ->
 					gen_udp:close(State#state.socket);
@@ -89,7 +88,7 @@ terminate(_Reason, _State) ->
 
 parse_info_response(Bin) ->
 	List = binary_to_list(Bin),
-	io:format("List: ~p~n", [List]),
+	%io:format("List: ~p~n", [List]),
 	Fields = [{request_header, long}, {header, byte}, {protocol, byte}, {name, string}, {map, string}, {folder, string}, {game, string}, {id, short}, {players, byte}, {max_players, byte}, {bots, byte}, {server_type, char}, {environment, char}, {visibility, byte}, {vac, byte}, {version, string}, {edf, byte}],
 	Data = parse_protocol(Fields, List),
 	io:format("~p~n", [Data]),
@@ -126,7 +125,7 @@ test_p1() ->
 	io:format("simple data: ~p~n", [Data]).
 
 parse_protocol([], Rest) ->
-	io:format("rest: ~p~n", [Rest]),
+	%io:format("rest: ~p~n", [Rest]),
 	[];
 parse_protocol([{Name, Type}|Rest], List) ->
 	{Data, NewList} = case Type of

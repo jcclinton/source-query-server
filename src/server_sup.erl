@@ -11,5 +11,5 @@ start_link() ->
 init([]) ->
 	Procs = [{query_server,
 					{query_server, start_link, []},
-					transient, 10000, worker, [query_server]}],
-	{ok, {{one_for_one, 60, 3600}, Procs}}.
+					transient, 5000, worker, [query_server]}],
+	{ok, {{one_for_one, 2, 5}, Procs}}.
