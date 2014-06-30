@@ -124,7 +124,7 @@ test_p1() ->
 	Data = parse_protocol(ByteFields, Byte),
 	io:format("simple data: ~p~n", [Data]).
 
-parse_protocol([], Rest) ->
+parse_protocol([], _Rest) ->
 	%io:format("rest: ~p~n", [Rest]),
 	[];
 parse_protocol([{Name, Type}|Rest], List) ->
@@ -136,33 +136,21 @@ parse_protocol([{Name, Type}|Rest], List) ->
 												Tail = lists:nthtail(N, List),
 												{String2, Tail};
 											long ->
-												E1 = hd(List),
-												E2 = hd(tl(List)),
-												E3 = hd(tl(tl(List))),
-												E4 = hd(tl(tl(tl(List)))),
+												[E1, E2, E3, E4|Tail] = List,
 												<<Val?L>> = <<E1?B, E2?B, E3?B, E4?B>>,
-												N = 4,
-												Tail = lists:nthtail(N, List),
 												{Val, Tail};
 											short ->
-												N = 2,
-												E1 = hd(List),
-												E2 = hd(tl(List)),
+												[E1, E2|Tail] = List,
 												<<Val?S>> = <<E1?B, E2?B>>,
-												Tail = lists:nthtail(N, List),
 												{Val, Tail};
 											byte ->
-												N = 1,
-												Val = hd(List),
-												Tail = lists:nthtail(N, List),
-												{Val, Tail};
+												[E1|Tail] = List,
+												{E1, Tail};
 											char ->
-												N = 1,
-												Val = hd(List),
-												Tail = lists:nthtail(N, List),
-												{[Val], Tail}
+												[E1|Tail] = List,
+												{[E1], Tail}
 										end,
-	[{Name, Data}] ++ parse_protocol(Rest, NewList).
+	[{Name, Data} | parse_protocol(Rest, NewList)].
 
 getString(List) ->
 	{_, String} = lists:foldl(fun(Elem, {Bool, S}) ->
